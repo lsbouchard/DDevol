@@ -1,0 +1,2 @@
+/* Generated from pauli_keys_rev.metal: do not edit this generated header. */
+static const char tpgp_metal_shader_source_rev[] = "@TPGP_METAL_SHADER@";

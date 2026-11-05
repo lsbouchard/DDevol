@@ -1,0 +1,6 @@
+/build*/
+/results*/
+/figures*/
+__pycache__/
+*.pyc
+.DS_Store
