@@ -5,6 +5,7 @@ import numpy as np
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
+from analytic_panels import render as render_analytic_panels
 
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument("--results", type=Path, required=True)
@@ -38,7 +39,7 @@ def fid_axes(ax, xmax):
     ax.axhline(0, color=".65", lw=.6, zorder=0)
     ax.set(xlabel="Dimensionless time $t$", ylabel="$F(t)$", xlim=(0, xmax))
 
-# Main figures use equal fixed canvases for the separately included panels.
+# Analytical comparisons use a shared canvas with aligned panel axes.
 d = read("truncation")
 fig, ax = canvas()
 ax.loglog(d["K"], d["actual_trace_distance"], "o-", color=colors[0], label="Measured state distance")
@@ -65,30 +66,9 @@ for ax, n, panel in zip(axes, [1000, 16], "ab"):
 axes[0].set_xlabel("")
 save(fig, "fid_t2_rev")
 
-for name, source, xmax, panel in [("pair_analytic", "pair", 50, "a"),
-                                  ("uniform_complete_analytic", "complete", 1.2, "b"),
-                                  ("ising_analytic", "ising", 14, "a")]:
-    d = read(source)
-    fig, ax = canvas()
-    fig.subplots_adjust(top=.86)
-    ax.plot(d["time"], d["analytic_FID"], color=colors[0], label="Analytical")
-    stride = {"pair": 40, "complete": 6, "ising": 10}[source]
-    ax.plot(d["time"][::stride], d["TPGP_FID"][::stride], "o", mfc="white", mec=colors[1], ms=4, label="TPGP")
-    fid_axes(ax, xmax)
-    ax.text(0, 1.06, f"({panel})", transform=ax.transAxes)
-    ax.legend(frameon=False, title=spin_label(1000) if source == "ising" else None,
-              loc="upper right", bbox_to_anchor=(1, 1.19), ncol=2)
-    save(fig, name)
-
-d = read("xy_.02")
-fig, ax = canvas()
-fig.subplots_adjust(top=.86)
-ax.plot(d["time"], d["finite_N_exact"], color=colors[0], label="Finite-chain solution")
-ax.plot(d["time"][::2], d["TPGP_correlation"][::2], "o", mfc="white", mec=colors[1], ms=4, label="TPGP")
-ax.text(0, 1.06, "(b)", transform=ax.transAxes)
-ax.set(xlabel="Dimensionless time $t$", ylabel="Boundary correlation", xlim=(0, 20))
-ax.legend(frameon=False, title=spin_label(1000), loc="upper right", bbox_to_anchor=(1, 1.19), ncol=2)
-save(fig, "xy_chain")
+render_analytic_panels(read("pair"), read("complete"), read("ising"),
+                      [(dt, read(f"xy_{step}")) for dt, step in
+                       [(.08, ".08"), (.04, ".04"), (.02, ".02")]], args.output)
 
 b = read("bounds")
 spread = read("threshold_envelope")

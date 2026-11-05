@@ -109,8 +109,8 @@ values, and moment envelopes are computed by native programs before plotting.
 |---|---|---|
 | 1: removal allowance | `core` | `fig_truncation_bound` |
 | 2: bounded FID and full trace | `bounded` | `fig_fid_t2_rev` |
-| 3: isolated pair and complete graph | `core` | `fig_pair_analytic`, `fig_uniform_complete_analytic` |
-| 4: Ising and XY | `core` | `fig_ising_analytic`, `fig_xy_chain` |
+| 3: isolated pair and complete graph | `core` | `fig_analytic_small_panels` |
+| 4: Ising and XY | `core` | `fig_analytic_large_panels` |
 | 5: moment enclosures | `core`, `long`, `analyze` | `fig_moment_bounds` |
 | 6: independent Lanczos | `core` | `fig_krylov_comparison` |
 | 7: circumference dependence | `finite` | `fig_finite_size_collapse` |
